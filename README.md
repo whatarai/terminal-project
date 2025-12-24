@@ -2,7 +2,7 @@
 這個程式是一個互動式的化學反應模擬平台，支援以下五種核心反應類型：基礎反應：零級 (Zero-order)、一級 (First-order)、二級 (Second-order) 反應。複合反應：連串反應 (Consecutive)、平行反應 (Parallel)。我在程式中求數值時捨棄現成的 SciPy 函式庫，改用 NumPy 手寫實作 四階龍格－庫塔法 (RK4)。RK4的數學邏輯是透過在每一個時間步長 (dt) 內進行四次斜率（導數）採樣，並進行加權平均，將截斷誤差降低。使得模擬曲線在處理非線性（如二級反應）或剛性系統（如連串反應）時，能保持極高的穩定性與精確度。最後是AI 數據診斷：整合 Google Gemini 1.5 Flash 大型語言模型，實現從「模擬數據」到「專業解釋」的自動化流程。
 2.使用方式
 在終端安裝必要套件：Bashpip install streamlit numpy matplotlib google-generativeai
-啟動程式：Bashstreamlit run pro.py
+啟動程式：python3 -m streamlit run pro.py
 操作流程：在左側邊欄選單切換 反應級數。調整滑桿設定 速率常數 (k)、初始濃度 與 運算步長 (dt)。在下方 API 設定區輸入金鑰，點擊「生成分析報告」獲取數據見解。
 3.程式架構
 get_derivatives(): 物理建模模組，定義各類反應的微分方程組。solve_rk4(): 核心運算引擎，執行 NumPy 矩陣迭代。Streamlit UI: 提供即時互動介面與 Matplotlib 圖表渲染。Fallback 模組: 當雲端 API 發生 404 報錯或網路異常時，自動觸發本地數據診斷邏輯。
