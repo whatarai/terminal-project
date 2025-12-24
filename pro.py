@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import google.generativeai as genai
 
-# --- 頁面配置 ---
-st.set_page_config(page_title="化學反應模擬器", layout="wide")
-st.title("ChemSim AI: 全級數動力學模擬引擎")
 
-# --- 側邊欄參數設定 ---
+st.set_page_config(page_title="化學反應模擬器", layout="wide")
+st.title("ChemSim AI: 動力學模擬引擎")
+
+
 with st.sidebar:
     st.header("模擬參數設定")
     reaction_type = st.selectbox(
@@ -21,10 +21,10 @@ with st.sidebar:
     t_end = st.number_input("模擬總時間 (s)", value=10.0, min_value=1.0)
     dt = st.slider("運算步長 (dt)", 0.01, 0.1, 0.05)
 
-# --- NumPy RK4 求解引擎 ---
+
 def get_derivatives(C, k1, k2, r_type):
     Ca = C[0]
-    # 確保濃度不為負值
+   
     Ca_safe = max(0, Ca)
     
     if r_type == "零級反應 (Zero-order)":
@@ -58,7 +58,7 @@ def solve_rk4(k1, k2, ca0, t_end, dt, r_type):
     t_steps = int(t_end / dt)
     time = np.linspace(0, t_end, t_steps)
     
-    # 初始化矩陣
+    
     num_species = 3 if "連串" in r_type or "平行" in r_type else 1
     C_results = np.zeros((t_steps, num_species))
     C_results[0, 0] = ca0
@@ -73,7 +73,6 @@ def solve_rk4(k1, k2, ca0, t_end, dt, r_type):
         
     return time, C_results
 
-# --- 繪圖區 ---
 t_plot, sol_plot = solve_rk4(k1, k2, ca0, t_end, dt, reaction_type)
 
 fig, ax = plt.subplots(figsize=(10, 5))
@@ -88,13 +87,13 @@ ax.legend()
 ax.grid(True, alpha=0.3)
 st.pyplot(fig)
 
-# --- AI 與本地診斷區 ---
+
 st.divider()
 st.subheader("AI 數據智能診斷")
 api_key = st.text_input("輸入 Gemini API Key ", type="password")
 
 if st.button("生成分析報告"):
-    # 本地分析內容
+   
     local_report = f"""
     ###  本地動力學診斷報告
     * **模型**：手寫 NumPy RK4 數值求解器。
